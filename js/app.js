@@ -1,3 +1,4 @@
+// global variables
 window.skaters = [];
 N = 0;
 
