@@ -1,6 +1,7 @@
 // global variables
 window.skaters = [];
 N = 0;
+numLines = 1;
 
 function Skater(name, jammer, blocker, size, agility, experience) {
   this.name = name;
@@ -41,6 +42,8 @@ var addSkater = function(){
   skaters.push(skater);
   $('#roster-list').append('<h5 class="roster-entry">' + skater.name + '</h5>');
   $('#the-form').trigger('reset');
+
+  addSkaterToLineSelection(skater);
 }
 
 function submitRoster() {
@@ -50,14 +53,68 @@ function submitRoster() {
     alert("Either your roster is blank or your browser sucks.");
   }
   $('.roster-entry').addClass('confirmed');
+  // if(skaters.length >= 7 && $('line-btn').
 }
 
 function clearRoster() {
   skaters=[];
   if(window.localStorage){
-    window.localStorage.setItem('skaters', '');
+    window.localStorage.clear();
     $('#roster-list').html("");
   }
+}
+
+function addSkaterToLineSelection(skater) {
+  if(skater.name && skater.name !== ''){
+    $('.select-player').append('<option>' + skater.name + '</option>');
+  }
+}
+
+function addLine(){
+  numLines++;
+  var line1 = document.getElementById('line-1');
+  newLine = line1.cloneNode(true);
+  newLine.id="line-" + numLines;
+  $('#lines-container').append(newLine);
+  return;
+
+}
+
+function startGame(){
+  // register lines in localStorage before moving to new page
+  if(submitLines()){
+    $('.container').hide();
+    $('.gameview').show();
+  }
+}
+
+function submitLines() {
+  if(window.localStorage){
+    var lines = [];
+    var lineDivs = document.getElementsByClassName('line');
+    if(numLines !== lineDivs.length){
+      alert("you have a problem");
+      return false;
+    }
+    for(var i = 1; i <= numLines; i++){
+      var line={};
+      $('#line-1 select.b1')
+      var selector = "#line-" + i + " select."
+      line['b1'] = $(selector + "b1").val();
+      line['b2'] = $(selector + "b2").val();
+      line['b3'] = $(selector + "b3").val();
+      line['p'] = $(selector + "pivot").val();
+      line['j'] = $(selector + "jammer").val();
+      lines.push(line);
+    }
+  } else {
+    alert("This app will not work in your browser.")
+    return;
+  }
+  console.log("Lines are as follows: \n" + JSON.stringify(lines));
+  window.localStorage.setItem('lines', JSON.stringify(lines));
+  return true;
+
 }
 
 $(document).ready(function(){
@@ -65,11 +122,29 @@ $(document).ready(function(){
   if(window.localStorage) {
     var skatersStored = window.localStorage.getItem('skaters');
     if(skatersStored && skatersStored !== ''){
+      alert('found skaters');
       skaters = JSON.parse(skatersStored);
       skaters.forEach((item)=>{
         var tmp = "<h5 class='roster-entry confirmed'>" + item["name"] + "</h5>";
         $('#roster-list').append(tmp);
+        addSkaterToLineSelection(item);
       });
     }
+    // check if lines are set
+    var linesStored = window.localStorage.getItem('lines');
+    if(linesStored && linesStored !== ''){
+      linesStored = JSON.parse(linesStored);
+      console.log(linesStored);
+      alert('found lines');
+      //numLines = linesStored.length;
+      linesStored.forEach((item, index)=>{
+        if(index !== 0 ) {
+          addLine();
+        }
+      });
+      // TODO: set lines to what they were before
+    }
   }
+
+
 });

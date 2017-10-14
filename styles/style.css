@@ -20,3 +20,24 @@ h5.confirmed {
   margin-top: 5px;
   margin-bottom: 5px;
 }
+
+.line {
+  border: solid 1px;
+}
+
+h6, select {
+  display: inline;
+}
+
+#add-line {
+  width: 80%;
+}
+
+/*temporary*/
+.container {
+  display: none;
+}
+
+.gameview {
+  display: block !important;
+}

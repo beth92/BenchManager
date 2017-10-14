@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Bench Manage</title>
     <!-- includes the things-->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/corejs-typeahead/1.2.1/typeahead.jquery.js"></script> -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" ></script>
@@ -44,8 +45,34 @@
     </div>
     <div class='col-6' align="center">
       <h2> Lines </h2>
+      <div class='row' align='center'>
+        <div class=' col-6'><input id='add-line' class='btn btn-default' value="Add Line" onclick='addLine(); return false;'></input></div>
+        <div class=' col-6'><input id='start-game' class='btn btn-success' value="Start Game" onclick='startGame(); return false;'></input></div>
+      </div>
+      <div id='lines-container'>
+        <div class='line' id='line-1'>
+          <h6>B: </h6><select class='select-player b1'></select><br>
+          <h6>B: </h6><select class='select-player b2'></select><br>
+          <h6>B: </h6><select class='select-player b3'></select><br>
+          <h6>P: </h6><select class='select-player pivot'></select><br>
+          <h6>J: </h6><select class='select-player jammer'></select><br>
+        </div>
+      </div>
     </div>
   </div>
   </div>
+
+  <!-- Gameplay view-->
+  <div class='gameview' style='display: none;'>
+    <h1 id='jam-count'>J1</h1>
+    <div class='row'>
+      <div class='col-6'>Previous line</div>
+      <div class='col-6'>Current Line
+        <sc
+        </div
+    </div>
+  </div>
+  <button id='next-jam' onclick='return newJam()'>New Jam</button>
+
   </body>
 </html>
