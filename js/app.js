@@ -39,9 +39,37 @@ var addSkater = function(){
   var skater = new Skater(name, jammer, blocker, size, agility, experience);
   console.log(JSON.stringify(skater));
   skaters.push(skater);
-  $('#roster-list').append('<h3>' + skater.name + '</h3>');
+  $('#roster-list').append('<h5 class="roster-entry">' + skater.name + '</h5>');
   $('#the-form').trigger('reset');
 }
 
+function submitRoster() {
+  if(window.localStorage && window.skaters.length > 0 ) {
+    window.localStorage.setItem('skaters', JSON.stringify(skaters));
+  } else {
+    alert("Either your roster is blank or your browser sucks.");
+  }
+  $('.roster-entry').addClass('confirmed');
+}
+
+function clearRoster() {
+  skaters=[];
+  if(window.localStorage){
+    window.localStorage.setItem('skaters', '');
+    $('#roster-list').html("");
+  }
+}
+
 $(document).ready(function(){
+  // check if roster has previously been set
+  if(window.localStorage) {
+    var skatersStored = window.localStorage.getItem('skaters');
+    if(skatersStored && skatersStored !== ''){
+      skaters = JSON.parse(skatersStored);
+      skaters.forEach((item)=>{
+        var tmp = "<h5 class='roster-entry confirmed'>" + item["name"] + "</h5>";
+        $('#roster-list').append(tmp);
+      });
+    }
+  }
 });

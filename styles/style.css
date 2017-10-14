@@ -11,3 +11,12 @@ input.form-control {
   max-width: 80vw;
   padding: 5px;
 }
+
+h5.confirmed {
+  color: #5cb85c;
+}
+
+.btn {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
