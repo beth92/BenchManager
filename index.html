@@ -28,7 +28,7 @@
           <div class="form-group">
         <label><input type='checkbox' name='size'> Size   </input></label>
       <label><input type='checkbox' name='agility'> Agility   </input></label>
-    <label><input type='checkbox' name='agility'> Experience   </input></label>
+    <label><input type='checkbox' name='experience'> Experience   </input></label>
       </div>
   <input type='button' id='add-skater' class="btn btn-primary" value="Add to roster" onclick="addSkater(); return false;"></input>
   <input type='button' id='submit-roster' class="btn btn-success" value="Submit roster" onclick="submitRoster(); return false;"></input>
@@ -65,14 +65,34 @@
   <!-- Gameplay view-->
   <div class='gameview' style='display: none;'>
     <h1 id='jam-count'>J1</h1>
-    <div class='row'>
-      <div class='col-6'>Previous line</div>
-      <div class='col-6'>Current Line
-        <sc
+    <div class='row justify-content-center'>
+      <div class='col-6' align='center' id='prev-line'><h3>On The Track:</h3>
+      <ul>
+        <li id='prev-b1'>B1:<input type="checkbox"></input></li>
+        <li id='prev-b2'>B2:</li>
+        <li id = 'prev-b3'>B3:</li>
+        <li id='prev-p'>P:</li>
+        <li id='prev-j'>J:</li>
+      </ul>
+    </div>
+      <div class='col-6' align='center' id='next-line'><h3>Coming Up:</h3>
+        <ul>
+          <li id='next-b1'>B1:</li>
+          <li id='next-b2'>B2:</li>
+          <li id = 'next-b3'>B3:</li>
+          <li id='next-p'>P:</li>
+          <li id='next-j'>J:</li>
+        </ul>
         </div
     </div>
   </div>
   <button id='next-jam' onclick='return newJam()'>New Jam</button>
+  <h1> Skater Info </h1>
+  <div class='row justify-content-right'>
+
+    <div class='col-8' id='skater-stats'>
+    </div>
+  </div>
 
   </body>
 </html>

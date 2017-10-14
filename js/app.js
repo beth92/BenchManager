@@ -1,7 +1,12 @@
 // global variables
 window.skaters = [];
+window.glines=[];
+window.oldLine={};
+window.currentLine={};
 N = 0;
 numLines = 1;
+jam = 1;
+lineOut = 1;
 
 function Skater(name, jammer, blocker, size, agility, experience) {
   this.name = name;
@@ -25,7 +30,7 @@ function JSONfromURL(s) {
 }
 
 function getPlayRatio(skater){
-  return skater.jams / skater.sits;
+  return skater.jams / jam;
 }
 
 var addSkater = function(){
@@ -40,7 +45,11 @@ var addSkater = function(){
   var skater = new Skater(name, jammer, blocker, size, agility, experience);
   console.log(JSON.stringify(skater));
   skaters.push(skater);
-  $('#roster-list').append('<h5 class="roster-entry">' + skater.name + '</h5>');
+  var info = "";
+  info += (skater.size) ? " S" : "";
+  info += (skater.agility) ? " A" : "";
+  info += (skater.experience) ? " E" : "";
+  $('#roster-list').append('<h5 class="roster-entry">' + skater.name + info + '</h5>');
   $('#the-form').trigger('reset');
 
   addSkaterToLineSelection(skater);
@@ -61,6 +70,7 @@ function clearRoster() {
   if(window.localStorage){
     window.localStorage.clear();
     $('#roster-list').html("");
+    document.location.reload();
   }
 }
 
@@ -86,6 +96,7 @@ function startGame(){
     $('.container').hide();
     $('.gameview').show();
   }
+  gameInit();
 }
 
 function submitLines() {
@@ -122,10 +133,15 @@ $(document).ready(function(){
   if(window.localStorage) {
     var skatersStored = window.localStorage.getItem('skaters');
     if(skatersStored && skatersStored !== ''){
-      alert('found skaters');
+      // alert('found skaters');
       skaters = JSON.parse(skatersStored);
       skaters.forEach((item)=>{
-        var tmp = "<h5 class='roster-entry confirmed'>" + item["name"] + "</h5>";
+        var info = "";
+        info += (item.size) ? " S" : "";
+        info += (item.agility) ? " A" : "";
+        info += (item.experience) ? " E" : "";
+
+        var tmp = "<h5 class='roster-entry confirmed'>" + item["name"] + info + "</h5>";
         $('#roster-list').append(tmp);
         addSkaterToLineSelection(item);
       });
@@ -135,7 +151,7 @@ $(document).ready(function(){
     if(linesStored && linesStored !== ''){
       linesStored = JSON.parse(linesStored);
       console.log(linesStored);
-      alert('found lines');
+      // alert('found lines');
       //numLines = linesStored.length;
       linesStored.forEach((item, index)=>{
         if(index !== 0 ) {
@@ -148,3 +164,71 @@ $(document).ready(function(){
 
 
 });
+
+function gameInit(){
+
+  var lines = window.localStorage.getItem('lines');
+  if(!lines){
+    alert('couldn\'t find any lines');
+    $('.container').show();
+    $('.gameview').hide();
+  }
+  lines = JSON.parse(lines);
+  glines=lines;
+  nextLine(glines[0]);
+  currentLine = glines[0];
+  // setup complete, now just listen for newJam
+
+}
+
+function nextLine(line){
+  // set next line html to next line
+  $('#next-b1').text("B1: " + line["b1"]);
+  $('#next-b2').text("B2: " + line["b2"]);
+  $('#next-b3').text("B3: " + line["b3"]);
+  $('#next-p').text("P: " + line["p"]);
+  $('#next-j').text("J: " + line["j"]);
+
+}
+
+function prevLine(line){
+  // set prev line html
+  // line arg must be JSON object
+  $('#prev-b1').text("B1: " + line["b1"]);
+  $('#prev-b2').text("B2: " + line["b2"]);
+  $('#prev-b3').text("B3: " + line["b3"]);
+  $('#prev-p').text("P: " + line["p"]);
+  $('#prev-j').text("J: " + line["j"]);
+}
+
+function newJam(){
+  jam++;
+  $('#jam-count').text("J"+jam);
+
+  lineOut = (lineOut+1) > numLines ? 1 : (lineOut + 1);
+  console.log("Sending out line " + lineOut);
+  prevLine(currentLine);
+  oldLine = currentLine;
+  currentLine = getNextLine();
+  nextLine(currentLine);
+  updateSkaterStats();
+}
+
+function getNextLine(){
+  // list of skaters currently out, with penalty
+  var penalties = [];
+  return glines[lineOut - 1];
+}
+
+function updateSkaterStats(){
+
+  var stats = "<ul>";
+  skaters.forEach((skater)=>{
+    // check old line and update the skaters who are on the track
+    if(Object.values(oldLine).indexOf(skater.name) >= 0){
+      skater.jams++;
+    }
+    stats += "<li>" + skater.name + ": " + skater.jams + " jams " + skater.sits + " sits " + (100.0*skater.jams/(jam-1)) + "&percnt;</li>"
+  });
+  $('#skater-stats').html(stats + "</ul>");
+}
