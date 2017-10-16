@@ -53,7 +53,7 @@ var addSkater = function(){
   $('#the-form').trigger('reset');
 
   addSkaterToLineSelection(skater);
-}
+};
 
 function submitRoster() {
   if(window.localStorage && window.skaters.length > 0 ) {
